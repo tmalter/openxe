@@ -965,7 +965,7 @@ class Artikel extends GenArtikel {
                     WHERE stuecklistevonartikel='$id' GROUP BY artikel
                   ) AS s2 ON lpi.artikel = s2.artikel
                   INNER JOIN lager_platz AS lp ON lpi.lager_platz = lp.id AND ifnull(lp.sperrlager,0) = 0
-                  GROUP BY lpi.artikel) AS lag ON a.id = lag.artikel  
+                  GROUP BY lpi.artikel) AS `lag` ON a.id = `lag`.artikel  
                 ";
 
         // Fester filter
@@ -2618,7 +2618,7 @@ class Artikel extends GenArtikel {
     if($lager_platz > 0)
     {
       $lagerarr = $this->app->DB->SelectRow("SELECT lp.lager,lp.kurzbezeichnung,lag.bezeichnung 
-        FROM lager_platz AS lp LEFT JOIN lager AS lag ON lp.lager = lag.id 
+        FROM lager_platz AS lp LEFT JOIN lager AS `lag` ON lp.lager = `lag`.id 
         WHERE lp.id = '$lager_platz' LIMIT 1");
       if(!empty($lagerarr))
       {

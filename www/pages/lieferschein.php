@@ -120,7 +120,7 @@ class Lieferschein extends GenLieferschein
         $findcols = array('art.nummer','art.name_de','t2.seriennummer','lag.kurzbezeichnung','t2.id');
         $searchsql = array('art.nummer','art.name_de','t2.seriennummer','lag.kurzbezeichnung' );
 
-          $sql = "SELECT  SQL_CALC_FOUND_ROWS t2.id, art.nummer, art.name_de, lag.kurzbezeichnung,  t2.seriennummer ,CONCAT('this,',t2.menge)
+          $sql = "SELECT  SQL_CALC_FOUND_ROWS t2.id, art.nummer, art.name_de, `lag`.kurzbezeichnung,  t2.seriennummer ,CONCAT('this,',t2.menge)
           FROM (
             SELECT ls.id, t.artikel, t.menge, count(s.id) as co, ls.seriennummer, ls.lager_platz 
             FROM lager_seriennummern AS ls 
@@ -135,7 +135,7 @@ class Lieferschein extends GenLieferschein
             GROUP BY ls.id, t.artikel
           ) AS t2 
           INNER JOIN artikel AS art ON t2.artikel = art.id
-          INNER JOIN lager_platz AS lag ON t2.lager_platz = lag.id
+          INNER JOIN lager_platz AS `lag` ON t2.lager_platz = `lag`.id
           
           ";
 
@@ -151,7 +151,7 @@ class Lieferschein extends GenLieferschein
           ON ls.artikel = lp.artikel LEFT JOIN seriennummern s ON s.artikel = t.artikel AND s.lieferschein = '$id'  AND s.seriennummer <> ''
           GROUP BY ls.id, t.artikel) t2 
           INNER JOIN artikel art ON t2.artikel = art.id
-          INNER JOIN lager_platz lag ON t2.lager_platz = lag.id
+          INNER JOIN lager_platz `lag` ON t2.lager_platz = `lag`.id
            WHERE $where";
 
 

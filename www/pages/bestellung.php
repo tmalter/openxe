@@ -598,7 +598,7 @@ class Bestellung extends GenBestellung
           INNER JOIN lager_platz AS lp ON lpi.lager_platz = lp.id AND IFNULL(lp.sperrlager,0) = 0 AND IFNULL(lp.autolagersperre,0) = 0
           ".(!empty($artikelIdList)?' AND lpi.artikel IN ('.implode(',', $artikelIdList).')':'')."
           GROUP BY lpi.artikel
-        ) as lag ON a.id = lag.artikel 
+        ) as `lag` ON a.id = `lag`.artikel 
         WHERE ap.bestellung='$id' 
         ORDER by ap.sort");
     foreach($table->datasets as $tablerowKey => $tableRow)
