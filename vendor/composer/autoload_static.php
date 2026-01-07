@@ -29,23 +29,23 @@ class ComposerStaticInit0c49a81c1214ef2f7493c6ce921b17ee
     );
 
     public static $prefixLengthsPsr4 = array (
-        'l' => 
+        'l' =>
         array (
             'lfkeitel\\phptotp\\' => 17,
         ),
-        'Y' => 
+        'Y' =>
         array (
             'Y0lk\\OAuth1\\Client\\Server\\' => 26,
         ),
-        'X' => 
+        'X' =>
         array (
             'Xentral\\' => 8,
         ),
-        'W' => 
+        'W' =>
         array (
             'Webmozart\\Assert\\' => 17,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Intl\\Normalizer\\' => 33,
@@ -63,18 +63,18 @@ class ComposerStaticInit0c49a81c1214ef2f7493c6ce921b17ee
             'Sabre\\CardDAV\\' => 14,
             'Sabre\\CalDAV\\' => 13,
         ),
-        'R' => 
+        'R' =>
         array (
             'Rakit\\Validation\\' => 17,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Log\\' => 8,
             'Psr\\Http\\Message\\' => 17,
             'Psr\\Container\\' => 14,
             'PHPMailer\\PHPMailer\\' => 20,
         ),
-        'L' => 
+        'L' =>
         array (
             'League\\OAuth1\\Client\\' => 21,
             'League\\MimeTypeDetection\\' => 25,
@@ -86,28 +86,28 @@ class ComposerStaticInit0c49a81c1214ef2f7493c6ce921b17ee
             'Laminas\\Mail\\' => 13,
             'Laminas\\Loader\\' => 15,
         ),
-        'J' => 
+        'J' =>
         array (
             'JmesPath\\' => 9,
         ),
-        'G' => 
+        'G' =>
         array (
             'GuzzleHttp\\Psr7\\' => 16,
             'GuzzleHttp\\Promise\\' => 19,
             'GuzzleHttp\\' => 11,
         ),
-        'F' => 
+        'F' =>
         array (
             'FiskalyClient\\' => 14,
             'FastRoute\\' => 10,
         ),
-        'D' => 
+        'D' =>
         array (
             'Datto\\JsonRpc\\Http\\Examples\\' => 28,
             'Datto\\JsonRpc\\Http\\' => 19,
             'Datto\\JsonRpc\\' => 14,
         ),
-        'A' => 
+        'A' =>
         array (
             'Aws\\' => 4,
             'Aura\\SqlQuery\\' => 14,
@@ -115,179 +115,179 @@ class ComposerStaticInit0c49a81c1214ef2f7493c6ce921b17ee
     );
 
     public static $prefixDirsPsr4 = array (
-        'lfkeitel\\phptotp\\' => 
+        'lfkeitel\\phptotp\\' =>
         array (
             0 => __DIR__ . '/..' . '/lfkeitel/phptotp/src',
         ),
-        'Y0lk\\OAuth1\\Client\\Server\\' => 
+        'Y0lk\\OAuth1\\Client\\Server\\' =>
         array (
             0 => __DIR__ . '/..' . '/y0lk/oauth1-etsy/src',
         ),
-        'Xentral\\' => 
+        'Xentral\\' =>
         array (
             0 => __DIR__ . '/../..' . '/classes',
         ),
-        'Webmozart\\Assert\\' => 
+        'Webmozart\\Assert\\' =>
         array (
             0 => __DIR__ . '/..' . '/webmozart/assert/src',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Intl\\Normalizer\\' => 
+        'Symfony\\Polyfill\\Intl\\Normalizer\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-normalizer',
         ),
-        'Symfony\\Polyfill\\Intl\\Idn\\' => 
+        'Symfony\\Polyfill\\Intl\\Idn\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-intl-idn',
         ),
-        'SwissPaymentSlip\\SwissPaymentSlip\\' => 
+        'SwissPaymentSlip\\SwissPaymentSlip\\' =>
         array (
             0 => __DIR__ . '/..' . '/swiss-payment-slip/swiss-payment-slip/src',
         ),
-        'SwissPaymentSlip\\SwissPaymentSlipPdf\\' => 
+        'SwissPaymentSlip\\SwissPaymentSlipPdf\\' =>
         array (
             0 => __DIR__ . '/..' . '/swiss-payment-slip/swiss-payment-slip-pdf/src',
         ),
-        'SwissPaymentSlip\\SwissPaymentSlipFpdf\\' => 
+        'SwissPaymentSlip\\SwissPaymentSlipFpdf\\' =>
         array (
             0 => __DIR__ . '/..' . '/swiss-payment-slip/swiss-payment-slip-fpdf/src',
         ),
-        'Sabre\\Xml\\' => 
+        'Sabre\\Xml\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/xml/lib',
         ),
-        'Sabre\\VObject\\' => 
+        'Sabre\\VObject\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/vobject/lib',
         ),
-        'Sabre\\Uri\\' => 
+        'Sabre\\Uri\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/uri/lib',
         ),
-        'Sabre\\HTTP\\' => 
+        'Sabre\\HTTP\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/http/lib',
         ),
-        'Sabre\\Event\\' => 
+        'Sabre\\Event\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/event/lib',
         ),
-        'Sabre\\DAV\\' => 
+        'Sabre\\DAV\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/dav/lib/DAV',
         ),
-        'Sabre\\DAVACL\\' => 
+        'Sabre\\DAVACL\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/dav/lib/DAVACL',
         ),
-        'Sabre\\CardDAV\\' => 
+        'Sabre\\CardDAV\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/dav/lib/CardDAV',
         ),
-        'Sabre\\CalDAV\\' => 
+        'Sabre\\CalDAV\\' =>
         array (
             0 => __DIR__ . '/..' . '/sabre/dav/lib/CalDAV',
         ),
-        'Rakit\\Validation\\' => 
+        'Rakit\\Validation\\' =>
         array (
             0 => __DIR__ . '/..' . '/rakit/validation/src',
         ),
-        'Psr\\Log\\' => 
+        'Psr\\Log\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/log/Psr/Log',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'Psr\\Container\\' => 
+        'Psr\\Container\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
-        'PHPMailer\\PHPMailer\\' => 
+        'PHPMailer\\PHPMailer\\' =>
         array (
             0 => __DIR__ . '/..' . '/phpmailer/phpmailer/src',
         ),
-        'League\\OAuth1\\Client\\' => 
+        'League\\OAuth1\\Client\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/oauth1-client/src',
         ),
-        'League\\MimeTypeDetection\\' => 
+        'League\\MimeTypeDetection\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/mime-type-detection/src',
         ),
-        'League\\Flysystem\\' => 
+        'League\\Flysystem\\' =>
         array (
             0 => __DIR__ . '/..' . '/league/flysystem/src',
         ),
-        'Laminas\\Validator\\' => 
+        'Laminas\\Validator\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-validator/src',
         ),
-        'Laminas\\Stdlib\\' => 
+        'Laminas\\Stdlib\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-stdlib/src',
         ),
-        'Laminas\\ServiceManager\\' => 
+        'Laminas\\ServiceManager\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-servicemanager/src',
         ),
-        'Laminas\\Mime\\' => 
+        'Laminas\\Mime\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-mime/src',
         ),
-        'Laminas\\Mail\\' => 
+        'Laminas\\Mail\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-mail/src',
         ),
-        'Laminas\\Loader\\' => 
+        'Laminas\\Loader\\' =>
         array (
             0 => __DIR__ . '/..' . '/laminas/laminas-loader/src',
         ),
-        'JmesPath\\' => 
+        'JmesPath\\' =>
         array (
             0 => __DIR__ . '/..' . '/mtdowling/jmespath.php/src',
         ),
-        'GuzzleHttp\\Psr7\\' => 
+        'GuzzleHttp\\Psr7\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/psr7/src',
         ),
-        'GuzzleHttp\\Promise\\' => 
+        'GuzzleHttp\\Promise\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/promises/src',
         ),
-        'GuzzleHttp\\' => 
+        'GuzzleHttp\\' =>
         array (
             0 => __DIR__ . '/..' . '/guzzlehttp/guzzle/src',
         ),
-        'FiskalyClient\\' => 
+        'FiskalyClient\\' =>
         array (
             0 => __DIR__ . '/..' . '/fiskaly/fiskaly-sdk-php/src',
         ),
-        'FastRoute\\' => 
+        'FastRoute\\' =>
         array (
             0 => __DIR__ . '/..' . '/nikic/fast-route/src',
         ),
-        'Datto\\JsonRpc\\Http\\Examples\\' => 
+        'Datto\\JsonRpc\\Http\\Examples\\' =>
         array (
             0 => __DIR__ . '/..' . '/datto/json-rpc-http/examples/src',
         ),
-        'Datto\\JsonRpc\\Http\\' => 
+        'Datto\\JsonRpc\\Http\\' =>
         array (
             0 => __DIR__ . '/..' . '/datto/json-rpc-http/src',
         ),
-        'Datto\\JsonRpc\\' => 
+        'Datto\\JsonRpc\\' =>
         array (
             0 => __DIR__ . '/..' . '/datto/json-rpc/src',
         ),
-        'Aws\\' => 
+        'Aws\\' =>
         array (
             0 => __DIR__ . '/..' . '/aws/aws-sdk-php/src',
         ),
-        'Aura\\SqlQuery\\' => 
+        'Aura\\SqlQuery\\' =>
         array (
             0 => __DIR__ . '/..' . '/aura/sqlquery/src',
         ),
@@ -298,9 +298,9 @@ class ComposerStaticInit0c49a81c1214ef2f7493c6ce921b17ee
     );
 
     public static $prefixesPsr0 = array (
-        'H' => 
+        'H' =>
         array (
-            'HTMLPurifier' => 
+            'HTMLPurifier' =>
             array (
                 0 => __DIR__ . '/..' . '/ezyang/htmlpurifier/library',
             ),
@@ -3029,6 +3029,7 @@ class ComposerStaticInit0c49a81c1214ef2f7493c6ce921b17ee
         'Xentral\\Modules\\Api\\Controller\\Version1\\DocumentScannerController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/DocumentScannerController.php',
         'Xentral\\Modules\\Api\\Controller\\Version1\\FileController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/FileController.php',
         'Xentral\\Modules\\Api\\Controller\\Version1\\GenericController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/GenericController.php',
+        'Xentral\\Modules\\Api\\Controller\\Version1\\ImportCSVController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/ImportCSVController.php',
         'Xentral\\Modules\\Api\\Controller\\Version1\\ReportsController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/ReportsController.php',
         'Xentral\\Modules\\Api\\Controller\\Version1\\StartController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/StartController.php',
         'Xentral\\Modules\\Api\\Controller\\Version1\\TrackingNumberController' => __DIR__ . '/../..' . '/classes/Modules/Api/Controller/Version1/TrackingNumberController.php',

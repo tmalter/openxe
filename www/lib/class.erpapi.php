@@ -301,14 +301,14 @@ public function checkPDFClass($beleg)
     if((int)$artikel <= 0 || $datei == '')return false;
     if($lager || $lager_platz)
     {
-      $artikelarr = $this->app->DB->SelectRow("SELECT art.nummer, art.herstellernummer, art.ean, ifnull(lag.menge,0) as lager_menge_total,  lag.lager_platz
+      $artikelarr = $this->app->DB->SelectRow("SELECT art.nummer, art.herstellernummer, art.ean, ifnull(`lag`.menge,0) as lager_menge_total,  `lag`.lager_platz
       FROM artikel art 
       LEFT JOIN (
         SELECT lpi.artikel,lp.kurzbezeichnung as lager_platz, trim(ifnull(sum(lpi.menge),0))+0 as menge FROM lager_platz_inhalt lpi
         INNER JOIN lager_platz lp ON lpi.lager_platz = lp.id AND lp.geloescht = 0 ".($lager_platz?" AND lp.id = '$lager_platz' ":"")."
         ".($lager?" AND lp.lager = '$lager' ":"")."
         WHERE lpi.artikel = '$artikel' GROUP BY lp.id
-      ) lag ON art.id = lag.artikel  WHERE art.id = '$artikel' LIMIT 1");
+      ) `lag` ON art.id = `lag`.artikel  WHERE art.id = '$artikel' LIMIT 1");
     }else{
       $artikelarr = $this->app->DB->SelectRow("SELECT art.nummer, art.herstellernummer, art.ean FROM artikel art
       WHERE art.id = '$artikel' LIMIT 1");
@@ -2927,7 +2927,7 @@ function LieferscheinEinlagern($id,$grund="Lieferschein Einlagern", $lpiids = nu
                     LEFT JOIN lager_mindesthaltbarkeitsdatum lm ON lm.artikel=lpi.artikel AND lp.id = lm.lager_platz 
                     WHERE lpi.artikel=%d AND lpi.menge > 0
                     ".($lpiid?'':' AND lp.autolagersperre!=1 AND '.$sperrlagerWhere)." AND `lag`.id='$standardlager' 
-                    ORDER by ".($lpiid?" lpi.id = '$lpiid' DESC, ":'')." ".($lager_platz_vpe?" lpi.lager_platz_vpe = '$lager_platz_vpe' DESC, ":'')." lag.id='$standardlager' DESC, $extraorder lm.mhddatum ASC, lpi.menge $sortreihenfolge 
+                    ORDER by ".($lpiid?" lpi.id = '$lpiid' DESC, ":'')." ".($lager_platz_vpe?" lpi.lager_platz_vpe = '$lager_platz_vpe' DESC, ":'')." `lag`.id='$standardlager' DESC, $extraorder lm.mhddatum ASC, lpi.menge $sortreihenfolge 
                     LIMIT 1",
                     (int)$artikel
                   )
@@ -7267,8 +7267,8 @@ function ArtikelAnzahlLager($artikel,$lager=0, $projektlager = 0)
   {
     if($projektlager)
     {
-      return $this->app->DB->Select("SELECT SUM(lpi.menge) FROM lager_platz_inhalt lpi INNER JOIN lager_platz lp ON lp.id=lpi.lager_platz INNER JOIN lager lag ON lp.lager = lag.id AND lag.geloescht <> 1
-          WHERE lpi.artikel='$artikel' AND lp.sperrlager!='1' AND lag.projekt = '$projektlager'");
+      return $this->app->DB->Select("SELECT SUM(lpi.menge) FROM lager_platz_inhalt lpi INNER JOIN lager_platz lp ON lp.id=lpi.lager_platz INNER JOIN lager `lag` ON lp.lager = `lag`.id AND `lag`.geloescht <> 1
+          WHERE lpi.artikel='$artikel' AND lp.sperrlager!='1' AND `lag`.projekt = '$projektlager'");
     }
     return $this->app->DB->Select("SELECT SUM(lpi.menge) FROM lager_platz_inhalt lpi LEFT JOIN lager_platz lp ON lp.id=lpi.lager_platz
         WHERE lpi.artikel='$artikel' AND lp.sperrlager!='1'");
@@ -20870,8 +20870,8 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
             "SELECT IFNULL(SUM(li.menge),0) 
             FROM lager_platz_inhalt AS li 
             INNER JOIN lager_platz AS lp ON lp.id=li.lager_platz 
-            INNER JOIN lager AS lag ON lag.id=lp.lager 
-            WHERE li.artikel= %d AND lp.autolagersperre!=1 AND lp.sperrlager!= 1  AND lag.id=%d",
+            INNER JOIN `lager` AS `lag` ON `lag`.id=lp.lager 
+            WHERE li.artikel= %d AND lp.autolagersperre!=1 AND lp.sperrlager!= 1  AND `lag`.id=%d",
             (int)$artikel, (int)$standardlager
           )
         ),
@@ -20884,8 +20884,8 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
               "SELECT IFNULL(SUM(li.menge),0) 
             FROM lager_mindesthaltbarkeitsdatum AS li 
             INNER JOIN lager_platz AS lp ON lp.id=li.lager_platz 
-            INNER JOIN lager AS lag ON lag.id=lp.lager 
-            WHERE li.artikel= %d AND lp.autolagersperre!=1 AND lp.sperrlager!= 1  AND lag.id=%d",
+            INNER JOIN `lager` AS `lag` ON `lag`.id=lp.lager 
+            WHERE li.artikel= %d AND lp.autolagersperre!=1 AND lp.sperrlager!= 1  AND `lag`.id=%d",
               (int)$artikel, (int)$standardlager
             )
           ),
@@ -20901,8 +20901,8 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
               "SELECT IFNULL(SUM(li.menge),0) 
             FROM lager_charge AS li 
             INNER JOIN lager_platz AS lp ON lp.id=li.lager_platz 
-            INNER JOIN lager AS lag ON lag.id=lp.lager 
-            WHERE li.artikel= %d AND lp.autolagersperre!=1 AND lp.sperrlager!= 1  AND lag.id=%d",
+            INNER JOIN `lager` AS `lag` ON `lag`.id=lp.lager 
+            WHERE li.artikel= %d AND lp.autolagersperre!=1 AND lp.sperrlager!= 1  AND `lag`.id=%d",
               (int)$artikel, (int)$standardlager
             )
           ),
@@ -20944,9 +20944,9 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
             "SELECT SUM(li.menge) 
               FROM lager_platz_inhalt AS li 
               INNER JOIN lager_platz AS lp ON lp.id=li.lager_platz 
-              INNER JOIN lager AS lag ON lag.id=lp.lager 
+              INNER JOIN `lager` AS `lag` ON `lag`.id=lp.lager 
               WHERE li.artikel=%d
-        AND lp.autolagersperre!=1 AND lp.sperrlager!= 1 AND lag.projekt=%d",
+        AND lp.autolagersperre!=1 AND lp.sperrlager!= 1 AND `lag`.projekt=%d",
             (int)$artikel, (int)$projekt
           )
         ),
@@ -20959,9 +20959,9 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
               "SELECT SUM(li.menge) 
               FROM lager_mindesthaltbarkeitsdatum AS li 
               INNER JOIN lager_platz AS lp ON lp.id=li.lager_platz 
-              INNER JOIN lager AS lag ON lag.id=lp.lager 
+              INNER JOIN `lager` AS `lag` ON `lag`.id=lp.lager 
               WHERE li.artikel=%d
-        AND lp.autolagersperre!=1 AND lp.sperrlager!= 1 AND lag.projekt=%d",
+        AND lp.autolagersperre!=1 AND lp.sperrlager!= 1 AND `lag`.projekt=%d",
               (int)$artikel, (int)$projekt
             )
           ),
@@ -20977,9 +20977,9 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
               "SELECT SUM(li.menge) 
               FROM lager_charge AS li 
               INNER JOIN lager_platz AS lp ON lp.id=li.lager_platz 
-              INNER JOIN lager AS lag ON lag.id=lp.lager 
+              INNER JOIN `lager` AS `lag` ON `lag`.id=lp.lager 
               WHERE li.artikel=%d
-        AND lp.autolagersperre!=1 AND lp.sperrlager!= 1 AND lag.projekt=%d",
+        AND lp.autolagersperre!=1 AND lp.sperrlager!= 1 AND `lag`.projekt=%d",
               (int)$artikel, (int)$projekt
             )
           ),

@@ -1883,4 +1883,3 @@ class Shopimport {
         $this->app->BuildNavigation = false;
     }
 }
-

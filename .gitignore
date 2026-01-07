@@ -6,3 +6,5 @@ node_modules/
 www/themes/new/css/custom.css
 docker-compose.override.yml
 .idea
+vendor
+!vendor/mustal/mustal_mysql_upgrade_tool.php
