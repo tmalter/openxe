@@ -8,3 +8,4 @@ docker-compose.override.yml
 .idea
 vendor
 !vendor/mustal/mustal_mysql_upgrade_tool.php
+/upgrade/data/upgrade.log

@@ -1,5 +1,0 @@
-linters:
-    phpcs:
-        standard: PSR2
-        extensions: '.php,.ctp'
-        tab_width: 4
