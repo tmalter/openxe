@@ -5157,21 +5157,24 @@ function AdresseBelege()
   $von = $this->app->User->GetParameter("adresse_belege_von");
   $bis = $this->app->User->GetParameter("adresse_belege_bis");
 
-  if($cmd == 'kundensaldodatumsrelevant'){
+  if ($cmd === 'kundensaldodatumsrelevant') {
     $von = $this->app->Secure->GetGET("von");
     $bis = $this->app->Secure->GetGET("bis");
   }
+    if ($von !== null && $bis !== null) {
+        $von = date_format(date_create_from_format('d.m.Y', $von), 'Y-m-d');
+        $bis = date_format(date_create_from_format('d.m.Y', $bis), 'Y-m-d');
+    }
 
-if (!is_null($von) && !is_null($bis)) 
-{
-	$von = date_format(date_create_from_format('d.m.Y', $von), 'Y-m-d');
-	$bis = date_format(date_create_from_format('d.m.Y', $bis), 'Y-m-d');
-}
-
-  $rechnungt = $this->app->DB->Select("SELECT SUM(soll-ist) FROM rechnung WHERE status != 'angelegt' AND zahlungsstatus != 'bezahlt' AND adresse = '$id' AND datum >= '$von' AND datum <= '$bis'");
+    $rechnungt = 0;
+    $gutschriftt = 0;
+    $verbindlichkeitt = 0;
+    if (isset($von, $bis)) {
+      $rechnungt = $this->app->DB->Select("SELECT SUM(soll-ist) FROM rechnung WHERE status != 'angelegt' AND zahlungsstatus != 'bezahlt' AND adresse = '$id' AND datum >= '$von' AND datum <= '$bis'");
+      $gutschriftt = $this->app->DB->Select("SELECT SUM(soll-ist) FROM gutschrift WHERE status != 'angelegt' AND (manuell_vorabbezahlt = '0000-00-00' OR manuell_vorabbezahlt IS NULL) AND zahlungsstatus != 'bezahlt' AND rechnungid = 0 AND adresse = '$adresse' AND datum >= '$von' AND datum <= '$bis'");
+      $verbindlichkeitt = $this->app->DB->Select("SELECT SUM(betrag-betragbezahlt) FROM verbindlichkeit WHERE status = 'offen' AND adresse = '$id' AND rechnungsdatum >= '$von' AND rechnungsdatum <= '$bis'");
+    }
   //$gutschriftt = $this->app->DB->Select("SELECT SUM(soll-ist) FROM gutschrift WHERE status != 'angelegt' AND (manuell_vorabbezahlt != '0000-00-00' OR manuell_vorabbezahlt IS NOT NULL) AND adresse = '$id' AND datum >= '$von' AND datum <= '$bis'");
-  $gutschriftt = $this->app->DB->Select("SELECT SUM(soll-ist) FROM gutschrift WHERE status != 'angelegt' AND (manuell_vorabbezahlt = '0000-00-00' OR manuell_vorabbezahlt IS NULL) AND zahlungsstatus != 'bezahlt' AND rechnungid = 0 AND adresse = '$adresse' AND datum >= '$von' AND datum <= '$bis'");
-  $verbindlichkeitt = $this->app->DB->Select("SELECT SUM(betrag-betragbezahlt) FROM verbindlichkeit WHERE status = 'offen' AND adresse = '$id' AND rechnungsdatum >= '$von' AND rechnungsdatum <= '$bis'");
   $kundensaldot = $rechnungt - $gutschriftt - $verbindlichkeitt;
   $kundensaldot = round($kundensaldot, 2);
 
@@ -6614,5 +6617,3 @@ function AdresseVerein()
     return $sql;
   }
 }
-
-

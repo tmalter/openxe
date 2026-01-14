@@ -252,7 +252,7 @@ class DB{
       if(!$this->results) {
         return null;
       }
-        
+
       $jsarray = null;
       if((!$this->disablehtmlclearing || !$this->disableclearjs) && !empty($this->app)
         && !empty($this->app->stringcleaner)) {
@@ -1557,4 +1557,3 @@ class DB{
     return true;
   }
 }
-

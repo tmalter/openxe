@@ -169,7 +169,7 @@ class WidgetProjekt extends WidgetGenProjekt
     $field->AddOptionsAsocSimpleArray($versandart);
     $this->form->NewField($field);
 
-    $versandart = array_merge(array(0=>''),$this->app->erp->GetDrucker());
+    $versandart = array_merge(array(0=>''),$this->app->erp->GetDrucker() ?? []);
 
     $field = new HTMLSelect("intraship_exportdrucker",0);
     $field->AddOptionsAsocSimpleArray($versandart);
