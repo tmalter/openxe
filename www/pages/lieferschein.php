@@ -1329,12 +1329,15 @@ class Lieferschein extends GenLieferschein
           $this->app->erp->LagerEinlagern($olp['artikel'],$olp['menge'],$olp['lager_platz'],$projekt,
                 'Stornierung Lieferschein '.$belegnr,$this->app->User->GetName(),'','lieferschein',$id);
           $beleg_chargesnmhd = $this->app->DB->SelectArr("SELECT * FROM `beleg_chargesnmhd` WHERE doctype = 'lieferschein' AND doctypeid = '$id' AND pos = '".$olp['parameter']."'");
-          $seriennummern = $this->app->DB->SelectArr("SELECT * FROM seriennummern WHERE lieferschein = '$id' AND lieferscheinpos = '".$olp['parameter']."'");
-          if($seriennummern) {
-            foreach($seriennummern as $sn)  {
-              $belegesnarr['sn'][] = array('menge'=>1, 'value'=>$sn['seriennummer'],'table'=>'seriennummern','id'=>$sn['id']);
-            }
-          }
+
+          // @TODO :: check if this part is still required?
+//          $seriennummern = $this->app->DB->SelectArr("SELECT * FROM seriennummern WHERE lieferschein = '$id' AND lieferscheinpos = '".$olp['parameter']."'");
+//          if($seriennummern) {
+//            foreach($seriennummern as $sn)  {
+//              $belegesnarr['sn'][] = array('menge'=>1, 'value'=>$sn['seriennummer'],'table'=>'seriennummern','id'=>$sn['id']);
+//            }
+//          }
+
           if($beleg_chargesnmhd) {
             $belegesnarr = null;
             foreach($beleg_chargesnmhd as $bc) {
