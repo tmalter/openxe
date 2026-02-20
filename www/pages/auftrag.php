@@ -2829,7 +2829,7 @@ class Auftrag extends GenAuftrag
                             ifnull((SELECT TRIM(ifnull(SUM(l.menge),0))+0
                               FROM lager_platz_inhalt l
                               INNER JOIN lager_platz lp ON lp.id=l.lager_platz
-                              INNER JOIN lager lag ON lp.lager = lag.id AND lag.projekt = '$projektlager'
+                              INNER JOIN lager `lag` ON lp.lager = `lag`.id AND `lag`.projekt = '$projektlager'
                               WHERE l.artikel=ap.artikel AND lp.autolagersperre!=1 AND lp.sperrlager!=1
                             ),0)
                             - IFNULL((
@@ -2843,7 +2843,7 @@ class Auftrag extends GenAuftrag
                             (SELECT TRIM(ifnull(SUM(l.menge),0))+0
                               FROM lager_platz_inhalt l
                               INNER JOIN lager_platz lp ON lp.id=l.lager_platz
-                              INNER JOIN lager lag ON lp.lager = lag.id AND lag.projekt = '$projektlager'
+                              INNER JOIN lager `lag` ON lp.lager = `lag`.id AND `lag`.projekt = '$projektlager'
                               WHERE l.artikel=ap.artikel AND lp.autolagersperre!=1 AND lp.sperrlager!=1
                             )
                             - IFNULL((
@@ -2926,7 +2926,7 @@ class Auftrag extends GenAuftrag
                             SELECT ifnull(SUM(l.menge),0)
                             FROM lager_platz_inhalt l
                             INNER JOIN lager_platz lp ON lp.id=l.lager_platz
-                            INNER JOIN lager lag ON lp.lager = lag.id AND lag.projekt = '$projektlager'
+                            INNER JOIN lager `lag` ON lp.lager = `lag`.id AND `lag`.projekt = '$projektlager'
                             WHERE l.artikel=ap.artikel AND lp.autolagersperre=1 AND lp.sperrlager!=1)>0,
                           CONCAT(' + <a href=\"index.php?module=artikel&action=lager&id=',ap.artikel,'\" title=\"Nachschublager\" target=\"_blank\"><font color=red><b>',(SELECT ".$this->app->erp->FormatMenge("ifnull(SUM(l.menge),0)")." FROM lager_platz_inhalt l LEFT JOIN lager_platz lp ON lp.id=l.lager_platz WHERE l.artikel=ap.artikel AND lp.lager='$standardlager' AND lp.autolagersperre=1 AND lp.sperrlager!=1),'(N)<b></font></a>'),'')
                          )
@@ -2938,14 +2938,14 @@ class Auftrag extends GenAuftrag
                         (SELECT TRIM(ifnull(SUM(l.menge),0))+0
                           FROM lager_platz_inhalt l
                           INNER JOIN lager_platz lp ON lp.id=l.lager_platz
-                          INNER JOIN lager lag ON lp.lager = lag.id AND lag.projekt = '$projektlager'
+                          INNER JOIN lager `lag` ON lp.lager = `lag`.id AND `lag`.projekt = '$projektlager'
                         WHERE l.artikel=ap.artikel AND lp.autolagersperre!=1 AND lp.sperrlager!=1)
                         - IFNULL((SELECT ifnull(SUM(r.menge),0) FROM lager_reserviert r WHERE r.artikel=ap.artikel AND r.objekt='auftrag' AND r.parameter!='$id'),0))>=0,
                         CONCAT('<font color=red><b>',
                             (SELECT ".$this->app->erp->FormatMenge("ifnull(SUM(l.menge),0)")."
                             FROM lager_platz_inhalt l
                             INNER JOIN lager_platz lp ON lp.id=l.lager_platz
-                            INNER JOIN lager lag ON lp.lager = lag.id AND lag.projekt = '$projektlager'
+                            INNER JOIN lager `lag` ON lp.lager = `lag`.id AND `lag`.projekt = '$projektlager'
                             WHERE l.artikel=ap.artikel AND lp.autolagersperre!=1 AND lp.sperrlager!=1)
 
                             ,'</b></font>'),
