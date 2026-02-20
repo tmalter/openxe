@@ -21505,6 +21505,17 @@
                     "Comment": ""
                 },
                 {
+                    "Field": "kommission_ok",
+                    "Type": "int(1)",
+                    "Collation": null,
+                    "Null": "NO",
+                    "Key": "",
+                    "Default": null,
+                    "Extra": "",
+                    "Privileges": "select,insert,update,references",
+                    "Comment": ""
+                },
+                {
                     "Field": "lager_ok",
                     "Type": "int(1)",
                     "Collation": null,
@@ -50797,7 +50808,29 @@
                     "Comment": ""
                 },
                 {
+                    "Field": "artikelnummerkunde",
+                    "Type": "varchar(128)",
+                    "Collation": "utf8mb3_general_ci",
+                    "Null": "NO",
+                    "Key": "",
+                    "Default": "",
+                    "Extra": "",
+                    "Privileges": "select,insert,update,references",
+                    "Comment": ""
+                },
+                {
                     "Field": "lager_platz",
+                    "Type": "int(11)",
+                    "Collation": null,
+                    "Null": "NO",
+                    "Key": "",
+                    "Default": "0",
+                    "Extra": "",
+                    "Privileges": "select,insert,update,references",
+                    "Comment": ""
+                },
+                {
+                    "Field": "ziel_lager_platz",
                     "Type": "int(11)",
                     "Collation": null,
                     "Null": "NO",
@@ -50831,6 +50864,17 @@
                 },
                 {
                     "Field": "ausgeblendet",
+                    "Type": "tinyint(1)",
+                    "Collation": null,
+                    "Null": "NO",
+                    "Key": "",
+                    "Default": "0",
+                    "Extra": "",
+                    "Privileges": "select,insert,update,references",
+                    "Comment": ""
+                },
+                {
+                    "Field": "in_paket_hinzugefuegt",
                     "Type": "tinyint(1)",
                     "Collation": null,
                     "Null": "NO",
@@ -53811,7 +53855,7 @@
                 },
                 {
                     "Field": "zeit",
-                    "Type": "datetime",
+                    "Type": "datetime(6)",
                     "Collation": null,
                     "Null": "NO",
                     "Key": "",
@@ -54477,6 +54521,17 @@
                 },
                 {
                     "Field": "sperrlager",
+                    "Type": "int(1)",
+                    "Collation": null,
+                    "Null": "NO",
+                    "Key": "",
+                    "Default": "0",
+                    "Extra": "",
+                    "Privileges": "select,insert,update,references",
+                    "Comment": ""
+                },
+                {
+                    "Field": "kommissionierlager",
                     "Type": "int(1)",
                     "Collation": null,
                     "Null": "NO",
@@ -80150,6 +80205,17 @@
                 },
                 {
                     "Field": "standardlager",
+                    "Type": "int(11)",
+                    "Collation": null,
+                    "Null": "NO",
+                    "Key": "",
+                    "Default": "0",
+                    "Extra": "",
+                    "Privileges": "select,insert,update,references",
+                    "Comment": ""
+                },
+                {
+                    "Field": "standardkommissionierlagerplatz",
                     "Type": "int(11)",
                     "Collation": null,
                     "Null": "NO",
