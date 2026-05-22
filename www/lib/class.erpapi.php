@@ -69,11 +69,14 @@ class erpAPI
   /** @var array $appList */
   protected $appList = [];
 
+  private \Psr\Log\LoggerInterface $logger;
+
   /** @var ApplicationCore $app */
 
   public function __construct($app)
   {
     $this->app=$app;
+    $this->logger = $app->Container->get('Logger');
     if(empty($this->app->erp)){
       $this->app->erp = $this;
     }
@@ -553,7 +556,7 @@ function Belegeexport($datei, $doctype, $doctypeid, $append = false, $optionen =
       $peakmemory = number_format(memory_get_peak_usage()/1024.0/1024.0,2);
       $runtime = number_format($akttime - $this->logtime,3);
       $runtimeall = number_format($akttime - $this->firstlogtime,3);
-      $this->LogFile('Time all '.$runtimeall."s last: ".$runtime."s Memakt:".$aktmemory."MB peak:".$peakmemory."MB ".$this->app->DB->real_escape_string( $json?json_encode($message):$message));
+      $this->logger->info('Time all '.$runtimeall."s last: ".$runtime."s Memakt:".$aktmemory."MB peak:".$peakmemory."MB ".$this->app->DB->real_escape_string( $json?json_encode($message):$message));
       $this->logtime = $akttime;
     }
   }
@@ -849,11 +852,11 @@ public function NavigationHooks(&$menu)
     if($v['sec'] !== '' || !isset($first[$v['first']])) {
       if($v['sec'] == '') {
         $menu[] = array('first'=>array($v['first'], $v['module'],$v['action']));
-        $first[$v['first']] = (!empty($menu)?count($menu):0);
+        $first[$v['first']] = (!empty($menu)?count($menu):0)-1;
       }
       elseif($v['sec'] != '' && !isset($first[$v['first']])){
         $menu[] = array('first'=>array($v['first'], '',''),'sec'=>array(array($v['sec'],$v['module'],$v['action'])));
-        $first[$v['first']] = (!empty($menu)?count($menu):0);
+        $first[$v['first']] = (!empty($menu)?count($menu):0)-1;
       }
       else{
         if(isset($menu[$first[$v['first']]])) {
@@ -1512,13 +1515,13 @@ public function NavigationHooks(&$menu)
           try {
             $userPermission->log($grantingUserId,$grantingUserName,$receivingUserId,$receivingUserName,$module,$action,false);
           }catch (Exception $ex){
-            $this->app->erp->LogFile('Fehler bei Zuweisung Rechtehistore',$ex->getMessage());
+            $this->logger->error('Fehler bei Zuweisung Rechtehistore',[$ex->getMessage()]);
           }
           $this->app->DB->Insert("INSERT INTO userrights (user, module, action, permission) VALUES ('".$user[$i]['id']."','$module','$action','$permission')");
           try {
             $userPermission->log($grantingUserId,$grantingUserName,$receivingUserId,$receivingUserName,$module,$action,true);
           }catch (Exception $ex){
-            $this->app->erp->LogFile('Fehler bei Zuweisung Rechtehistore',$ex->getMessage());
+            $this->logger->error('Fehler bei Zuweisung Rechtehistore',[$ex->getMessage()]);
           }
         }else{
             $permissions = $this->app->DB->SelectArr("SELECT module, action,permission
@@ -1527,7 +1530,7 @@ public function NavigationHooks(&$menu)
               try {
                 $userPermission->log($grantingUserId,$grantingUserName,$receivingUserId,$receivingUserName,$permission['module'],$permission['action'],$permission['permission']);
               }catch (Exception $ex){
-                $this->app->erp->LogFile('Fehler bei Zuweisung Rechtehistore',$ex->getMessage());
+                $this->logger->error('Fehler bei Zuweisung Rechtehistore',[$ex->getMessage()]);
               }
             }
           $this->app->DB->Update("REPLACE INTO userrights (user, module,action,permission) (SELECT '".$user[$i]['id']."',module, action,permission
@@ -2181,7 +2184,7 @@ public function NavigationHooks(&$menu)
             unlink($tmpfile);
             $tmpfile = '';
           }
-          $this->LogFile($this->app->DB->real_escape_string($e->getMessage()));
+          $this->logger->error($this->app->DB->real_escape_string($e->getMessage()));
           return false;
         }
         $this->app->erp->BriefpapierHintergrunddisable = !$this->app->erp->BriefpapierHintergrunddisable;
@@ -2197,7 +2200,7 @@ public function NavigationHooks(&$menu)
           if($tmpfile !== '' && is_file($tmpfile)) {
             unlink($tmpfile);
           }
-          $this->LogFile($this->app->DB->real_escape_string($e->getMessage()));
+          $this->logger->error($this->app->DB->real_escape_string($e->getMessage()));
           $this->app->erp->BriefpapierHintergrunddisable = !$this->app->erp->BriefpapierHintergrunddisable;
           return false;
         }
@@ -16533,19 +16536,8 @@ function Gegenkonto($ust_befreit,$ustid='', $doctype = '', $doctypeId = 0)
   {
     if(self::$lasttime == 0)self::$lasttime = microtime(true);
     $akttime = microtime(true);
-    $this->LogFile( addslashes((memory_get_peak_usage(true) >> 20).  " MB ".(round($akttime - self::$lasttime ,3)  )." sek ".$meldung));
+    $this->logger->info( addslashes((memory_get_peak_usage(true) >> 20).  " MB ".(round($akttime - self::$lasttime ,3)  )." sek ".$meldung));
 
-  }
-
-
-  function LogFile($meldung,$dump="",$module="",$action="",$functionname="")
-  {
-
-    $obj = $this->LoadModul('logfile');
-    if(!empty($obj) && method_exists($obj,'addLogFile')) {
-      return $obj->addLogFile($meldung,$dump,$module,$action,$functionname);
-    }
-    return null;
   }
 
 
@@ -16562,8 +16554,8 @@ function Gegenkonto($ust_befreit,$ustid='', $doctype = '', $doctypeId = 0)
       {
         $val = $this->app->DB->real_escape_string(${$key});
         $this->app->DB->Update("UPDATE adresse SET $key='$val' WHERE id='$adresse' LIMIT 1");
-        $check = $this->app->DB->real_escape_string($check);
-        $this->app->DB->Update("UPDATE adresse SET `logfile`=CONCAT(logfile, ' Update Feld $key alt:$check neu:".$val.";') WHERE id='$adresse' LIMIT 1");
+        $logfile = $this->app->DB->Select("SELECT `logfile` FROM adresse WHERE id='$adresse' LIMIT 1");
+        $this->app->DB->Update("UPDATE adresse SET `logfile`='".$logfile." Update Feld $key alt:$check neu:".$val.";' WHERE id='$adresse' LIMIT 1");
       }
 
     }
@@ -17461,6 +17453,9 @@ function CheckShopTabelle($artikel)
       $fastlane = 0;
     }
 
+    if (empty($warenkorb['zahlungsweise'])) {
+        $warenkorb['zahlungsweise'] = $this->app->DB->Select("SELECT zahlungsweise FROM adresse WHERE id = '$adresse' LIMIT 1");
+    }
 
     $warenkorb['zahlungsweise'] = str_replace(array('&uuml;','&Uuml;','&auml;','&Auml;','&ouml;','&Ouml;','&szlig;'),array('ü','Ü','ä','Ä','ö','Ö','ß'), $warenkorb['zahlungsweise']);
     if($zahlungsweisenmapping)
@@ -18385,7 +18380,7 @@ function CheckShopTabelle($artikel)
             $rabattpositionen[$ap] = $value['rabatt'];
           }
           if(empty($ap)){
-            $this->LogFile('Fehler '.$value['articleid']);
+            $this->logger->error('Fehler '.$value['articleid']);
           }
           if(isset($artap)){
             unset($artap);
@@ -18663,7 +18658,7 @@ function CheckShopTabelle($artikel)
                 }
             } else {
                 $error_msg = 'Importauftrag Shop '.$shop.' Fehler: Kein Portoartikel vorhanden';
-                $this->LogFile($error_msg,['Onlinebestellnummer' => $warenkorb['onlinebestellnummer']]);
+                $this->logger->error($error_msg,['Onlinebestellnummer' => $warenkorb['onlinebestellnummer']]);
                 return(array("status" => false, "message" => $error_msg, "onlinebestellnummer" => $warenkorb['onlinebestellnummer']));
             }
         }
@@ -21013,7 +21008,7 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
                 $result = $this->app->remote->RemoteSendArticleList($shop, array($lagerartikel[$ij]['id']), array($nummer['nummer']), true);
             }
             catch(Exception $e) {
-              $this->app->erp->LogFile($this->app->DB->real_escape_string('Lagersync Fehler '.$shop.' '.$nummer['nummer'].' '.$e->getMessage()));
+              $this->logger->error($this->app->DB->real_escape_string('Lagersync Fehler '.$shop.' '.$nummer['nummer'].' '.$e->getMessage()));
               $anzfehler++;
             }
           }
@@ -21024,7 +21019,7 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
               $result = $this->app->remote->RemoteSendArticleList($shop,array($lagerartikel[$ij]['id']),!empty($extnummer)? array($extnummer):'',true);
           }
           catch(Exception $e) {
-            $this->app->erp->LogFile($this->app->DB->real_escape_string('Lagersync Fehler '.$shop.' '.(!empty($extnummer)? array($extnummer):$lagerartikel[$ij]['nummer']).' '.$e->getMessage()));
+            $this->logger->error($this->app->DB->real_escape_string('Lagersync Fehler '.$shop.' '.(!empty($extnummer)? array($extnummer):$lagerartikel[$ij]['nummer']).' '.$e->getMessage()));
             $anzfehler++;
           }
         }
@@ -21035,7 +21030,7 @@ function ChargenMHDAuslagern($artikel, $menge, $lagerplatztyp, $lpid,$typ,$wert,
         }
 
 
-        $this->LogFile('*** UPDATE '.$lagerartikel[$ij]['nummer'].' '.$lagerartikel[$ij]['name_de'].' Shop: '.$shop.' Lagernd: '.$verkaufbare_menge.' Korrektur: '.round((float) ($verkaufbare_menge_korrektur - $verkaufbare_menge),7).' Pseudolager: '.round((float) $pseudolager,8).' Result: '.(is_array($result)?$result['status']:$result), $result);
+        $this->logger->info('*** UPDATE '.$lagerartikel[$ij]['nummer'].' '.$lagerartikel[$ij]['name_de'].' Shop: '.$shop.' Lagernd: '.$verkaufbare_menge.' Korrektur: '.round((float) ($verkaufbare_menge_korrektur - $verkaufbare_menge),7).' Pseudolager: '.round((float) $pseudolager,8).' Result: '.(is_array($result)?$result['status']:$result), [$result]);
 
         if ((is_array($result) && $result instanceof ArticleExportResult ? $result->success : false) || $result === 1) {
             $cacheQuantity = (int) $verkaufbare_menge_korrektur + (int) $pseudolager;
@@ -25549,7 +25544,7 @@ function MailSendFinal($from,$from_name,$to,$to_name,$betreff,$text,$files="",$p
             new EmailRecipient($from, $from_name)
           );
         } else {
-          $this->app->erp->LogFile("Mailer Error: Email could not be composed!");
+          $this->logger->error("Mailer Error: Email could not be composed!");
         }
 
         // Load the mail to IMAP using laminas
@@ -25562,7 +25557,7 @@ function MailSendFinal($from,$from_name,$to,$to_name,$betreff,$text,$files="",$p
           $client->connect();
           $client->appendMessage($imapCopyMessage, $account->getImapOutgoingFolder());
         } catch (Exception $e) {
-          $this->app->erp->LogFile("Mailer IMAP Error: " . (string) $e);
+          $this->logger->error("Mailer IMAP Error: " . (string) $e);
           if(isset($this->app->User) && $this->app->User && method_exists($this->app->User, 'GetID'))
           {
             $this->app->erp->InternesEvent($this->app->User->GetID(),"IMAP-Fehler","alert",1);
@@ -25884,7 +25879,7 @@ function MailSendFinal($from,$from_name,$to,$to_name,$betreff,$text,$files="",$p
     {
       return $wert;
     }
-    return $field; // Not found!
+    return "Beschriftung fehlt (".$this->beschriftung_sprache."): ".$field; // Not found!
   }
 
 
@@ -28618,7 +28613,11 @@ function Firmendaten($field,$projekt="")
           unset($backlink);
         }
 
-        $user = $this->app->DB->Select("SELECT usereditid FROM $modul WHERE id='$id' LIMIT 1");
+        try {
+            $user = $this->app->DB->Select("SELECT usereditid FROM $modul WHERE id='$id' LIMIT 1");
+        } catch (Exception $e) {
+            return false;
+        }
         if($this->app->DB->error())return false;
         $user_adresse = $this->app->DB->Select("SELECT adresse FROM user WHERE id='$user' LIMIT 1");
         $user_name = $this->app->DB->Select("SELECT name FROM adresse WHERE id='$user_adresse' LIMIT 1");
@@ -30834,7 +30833,7 @@ function Firmendaten($field,$projekt="")
         $sprache = $this->app->DB->Select("SELECT sprache FROM $doctype WHERE id='$auftrag' LIMIT 1");
 
         $this->RunHook('AARLGPositionenSprache', 6, $doctype, $auftrag, $artikel, $sprache, $bezeichnunglieferant, $beschreibung);
-        $this->app->erp->LogFile("Add $nummer,$menge $artikel $sprache Name: $bezeichnunglieferant");
+        $this->logger->info("Add $nummer,$menge $artikel $sprache Name: $bezeichnunglieferant");
 
         $verkaufspreisarr = $this->GetVerkaufspreis($artikel, $menge,0,'', $returnwaehrung,true);
         if($verkaufspreisarr)
@@ -33543,6 +33542,9 @@ function Firmendaten($field,$projekt="")
 
       public function LoadSteuersaetze($id,$typ,$projekt='')
       {
+
+        $steuersatz_zielland = false;
+
         if($id <= 0 || empty($typ)) {
           return;
         }
@@ -33570,11 +33572,21 @@ function Firmendaten($field,$projekt="")
           $steuersatz_ermaessigt = $projekt_arr['steuersatz_ermaessigt'];
         }
         else {
-          $steuersatz_normal = $this->Firmendaten('steuersatz_normal');
-          $steuersatz_ermaessigt = $this->Firmendaten('steuersatz_ermaessigt');
+            $land = $this->app->DB->Select("SELECT land FROM $typ WHERE id = $id");
+            if($objSteuersaetze !== null && method_exists($objSteuersaetze, 'checkTaxesToSet')) {
+                $steuersaetze = $objSteuersaetze->getTaxesByCountry($land);
+            }
+            if (!empty($steuersaetze)) {
+                $steuersatz_normal = $steuersaetze['normal'];
+                $steuersatz_ermaessigt = $steuersaetze['ermaessigt'];
+                $steuersatz_zielland = true;
+            } else {
+                $steuersatz_normal = $this->Firmendaten('steuersatz_normal');
+                $steuersatz_ermaessigt = $this->Firmendaten('steuersatz_ermaessigt');
+            }
         }
 
-        $this->app->DB->Update("UPDATE $typ SET steuersatz_normal='$steuersatz_normal',steuersatz_ermaessigt='$steuersatz_ermaessigt' WHERE id='$id' LIMIT 1");
+        $this->app->DB->Update("UPDATE $typ SET steuersatz_normal='$steuersatz_normal',steuersatz_ermaessigt='$steuersatz_ermaessigt',steuersatz_zielland='$steuersatz_zielland' WHERE id='$id' LIMIT 1");
         $this->app->erp->WriteChangeLog();
       }
 
@@ -37309,14 +37321,14 @@ function Firmendaten($field,$projekt="")
         $date = $this->app->DB->Select("SELECT datum FROM datei_version WHERE datei='$id' AND version='$version' LIMIT 1");
         return ($date);
       }
-      
+
       function GetDateiDatumFormat($id)
       {
         $version = $this->app->DB->Select("SELECT MAX(version) FROM datei_version WHERE datei='$id'");
         $date = $this->app->DB->Select("SELECT ".$this->app->erp->FormatDate("datum")." FROM datei_version WHERE datei='$id' AND version='$version' LIMIT 1");
         return ($date);
       }
-      
+
       function GetDateiDatumZeitFormat($id)
       {
         $version = $this->app->DB->Select("SELECT MAX(version) FROM datei_version WHERE datei='$id'");
@@ -39604,7 +39616,7 @@ function Firmendaten($field,$projekt="")
       $result = curl_exec($ch);
       if(strpos($result,"404 page not")===false) break;
       if($timeout > 10) {
-        $this->app->erp->LogFile("Openstreetmap GetLangLat Timeout: $url");
+        $this->logger->warning("Openstreetmap GetLangLat Timeout: $url");
         break;
       }
     }
@@ -39632,7 +39644,7 @@ function Firmendaten($field,$projekt="")
       $result = curl_exec($ch);
       if(strpos($result,"404 page not")===false) break;
       if($timeout > 10) {
-        $this->app->erp->LogFile("Openstreetmap Distance Timeout: $url");
+        $this->logger->warning("Openstreetmap Distance Timeout: $url");
         break;
       }
 
